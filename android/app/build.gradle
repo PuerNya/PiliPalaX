@@ -21,6 +21,10 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
+def _commitID = System.getenv("COMMIT_ID") ?: localProperties.getProperty('commmitID')
+if (_commitID == null) {
+    _commitID = 'abcdefg'
+}
 
 def keystorePropertiesFile = rootProject.file('key.properties')
 def keystoreProperties = new Properties()
@@ -91,9 +95,16 @@ android {
         }
     }
 
-    project.android.applicationVariants.all { variant ->
+    applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.versionCodeOverride = variant.versionCode
+        }
+        variant.outputs.all { output ->
+            def appName = "YourAppName" // 自定义应用名称
+            def version = variant.versionName // 版本号
+            def buildType = variant.name // 包类型，debug 还是 release
+            def abi = output.getFilter(com.android.build.OutputFile.ABI) ?: "universal"
+            outputFileName = "${appName}-${version}-${_commitID}-${buildType}-${abi}.apk"
         }
     }
 }
