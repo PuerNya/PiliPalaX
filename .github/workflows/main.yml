@@ -45,9 +45,6 @@ jobs:
           fi
 
       - name: flutter build apk
-        run: flutter build apk --release --target-platform=android-arm64
-
-      - name: flutter build apk
         run: flutter build apk --release --split-per-abi
 
       - name: 上传
